@@ -22,9 +22,9 @@ CORS(app, resources={r"/*": {"origins": [
 
 logging.basicConfig(level=logging.DEBUG)
 
-CLIENT_ID = os.getenv('LINKEDIN_CLIENT_ID', '86lnmivch9tovy')# LinkedIn app client ID
-CLIENT_SECRET = os.getenv('LINKEDIN_CLIENT_SECRET', 'WPL_AP1.qwBLnG8Wa3oYgVOp.4Cj07w==')# LinkedIn app client secret
-REDIRECT_URI = os.getenv('REDIRECT_URI', 'https://linkedin-repost-live-lcsf.vercel.app/linkedin-callback')# Redirect URI for LinkedIn app
+CLIENT_ID = os.getenv('LINKEDIN_CLIENT_ID')# LinkedIn app client ID
+CLIENT_SECRET = os.getenv('LINKEDIN_CLIENT_SECRET')# LinkedIn app client secret
+REDIRECT_URI = os.getenv('REDIRECT_URI')# Redirect URI for LinkedIn app
 # Ensure the redirect URI is registered in your LinkedIn app settings
 SCOPES = 'profile email w_member_social openid'# Scopes for LinkedIn API access
 # Ensure the scopes are registered in your LinkedIn app settings
