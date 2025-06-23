@@ -15,9 +15,7 @@ from urllib.parse import quote_plus
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": [
-    "http://localhost:3000",
-    "https://linkedin-repost-live-lcsf.vercel.app",
-    "https://linkedin-repost-live-lcsf-6ic9b33ji-adnans-projects-fce256b2.vercel.app"
+    "https://linkedin-repost-live-lcsf.vercel.app"
 ]}})
 
 logging.basicConfig(level=logging.DEBUG)
