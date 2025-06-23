@@ -24,7 +24,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 CLIENT_ID = os.getenv('LINKEDIN_CLIENT_ID', '788tikx31tlxr7')# LinkedIn app client ID
 CLIENT_SECRET = os.getenv('LINKEDIN_CLIENT_SECRET', 'WPL_AP1.UH17vI9IwnynugWZ.G9nCzg==')# LinkedIn app client secret
-REDIRECT_URI = os.getenv('REDIRECT_URI', 'http://localhost:3000/linkedin-callback')# Redirect URI for LinkedIn app
+REDIRECT_URI = os.getenv('REDIRECT_URI', 'https://linkedin-repost-live-lcsf.vercel.app/linkedin-callback')# Redirect URI for LinkedIn app
 # Ensure the redirect URI is registered in your LinkedIn app settings
 SCOPES = 'profile email w_member_social openid'# Scopes for LinkedIn API access
 # Ensure the scopes are registered in your LinkedIn app settings
