@@ -139,7 +139,6 @@ class LinkedInBot:
 
     def setup_browser(self):
         options = webdriver.ChromeOptions()
-        options.add_argument("--headless=new")
         options.add_argument("--disable-gpu")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
