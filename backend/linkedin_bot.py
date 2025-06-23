@@ -139,7 +139,7 @@ class LinkedInBot:
 
     def setup_browser(self):
         options = webdriver.ChromeOptions()
-        options.add_argument("--headless=new")  # Use modern headless mode
+        #options.add_argument("--headless=new")
         options.add_argument("--disable-gpu")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
@@ -161,18 +161,28 @@ class LinkedInBot:
  
     def login(self):
         self.driver.get("https://www.linkedin.com/login")
-        user = self.wait.until(EC.presence_of_element_located((By.ID, "username")))
-        pwd = self.wait.until(EC.presence_of_element_located((By.ID, "password")))
-        user.send_keys(self.email)
-        pwd.send_keys(self.password)
-        pwd.send_keys(Keys.RETURN)
-        time.sleep(5)  # Allow redirect to complete
 
         try:
-            self.wait.until(EC.url_contains("/feed"))
-            return True
+            user = self.wait.until(EC.presence_of_element_located((By.ID, "username")))
+            pwd = self.wait.until(EC.presence_of_element_located((By.ID, "password")))
+            user.send_keys(self.email)
+            pwd.send_keys(self.password)
+            pwd.send_keys(Keys.RETURN)
         except TimeoutException:
-            logging.error("Login failed or still on login page.")
+            logging.error("Login form not found")
+            return False
+
+        # Wait up to 60 seconds for successful login
+        for i in range(60):
+            current_url = self.driver.current_url
+            if "/feed" in current_url:
+                logging.info("Login successful.")
+                return True
+            elif "checkpoint" in current_url or "challenge" in current_url:
+                logging.warning(f"Checkpoint detected: {current_url}")
+            time.sleep(1)
+
+        logging.error(f"Login failed or stuck at: {self.driver.current_url}")
         return False
 
     def find_top_post(self):
