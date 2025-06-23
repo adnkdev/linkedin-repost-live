@@ -39,7 +39,7 @@ def start_oauth():
         "https://www.linkedin.com/oauth/v2/authorization"
         f"?response_type=code"
         f"&client_id={CLIENT_ID}"
-        f"&redirect_uri={REDIRECT_URI}"  # NOT encoded here
+        f"&redirect_uri={quote(REDIRECT_URI)}"  # NOT encoded here
         f"&state={state}"
         f"&scope={quote(SCOPES)}"       # ONLY encode scope
     )
