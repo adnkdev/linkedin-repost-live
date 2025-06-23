@@ -1,6 +1,6 @@
 import time
 import os, uuid, logging, requests, json, threading
-from urllib.parse import urlencode
+from urllib.parse import urlencode,quote
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from selenium import webdriver
@@ -42,7 +42,7 @@ def start_oauth():
         'state': state,
         'scope': SCOPES
     }
-    auth_url = 'https://www.linkedin.com/oauth/v2/authorization?' + urlencode(params)
+    auth_url = 'https://www.linkedin.com/oauth/v2/authorization?' + urlencode(params, quote_via=quote)
     logging.info(f"Generated auth URL: {auth_url}")
     return jsonify({'authUrl': auth_url})
 
