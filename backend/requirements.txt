@@ -5,3 +5,4 @@ requests
 python-dotenv
 webdriver_manager
 gunicorn
+undetected_chromedriver
