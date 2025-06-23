@@ -1,6 +1,6 @@
 import time
 import os, uuid, logging, requests, json, threading
-from urllib.parse import urlencode,quote
+from urllib.parse import urlencode
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from selenium import webdriver
@@ -15,7 +15,9 @@ from urllib.parse import quote_plus
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": [
-    "https://linkedin-repost-live-lcsf.vercel.app"
+    "http://localhost:3000",
+    "https://linkedin-repost-live-lcsf.vercel.app",
+    "https://linkedin-repost-live-lcsf-6ic9b33ji-adnans-projects-fce256b2.vercel.app"
 ]}})
 
 logging.basicConfig(level=logging.DEBUG)
@@ -24,7 +26,7 @@ CLIENT_ID = os.getenv('LINKEDIN_CLIENT_ID', '86lnmivch9tovy')# LinkedIn app clie
 CLIENT_SECRET = os.getenv('LINKEDIN_CLIENT_SECRET', 'WPL_AP1.qwBLnG8Wa3oYgVOp.4Cj07w==')# LinkedIn app client secret
 REDIRECT_URI = os.getenv('REDIRECT_URI', 'https://linkedin-repost-live-lcsf.vercel.app/linkedin-callback')# Redirect URI for LinkedIn app
 # Ensure the redirect URI is registered in your LinkedIn app settings
-SCOPES = 'r_liteprofile r_emailaddress w_member_social'# Scopes for LinkedIn API access
+SCOPES = 'profile email w_member_social openid'# Scopes for LinkedIn API access
 # Ensure the scopes are registered in your LinkedIn app settings
 
 VALID_STATES = set()
@@ -33,14 +35,14 @@ VALID_STATES = set()
 def start_oauth():
     state = str(uuid.uuid4())
     VALID_STATES.add(state)
-    auth_url = (
-        "https://www.linkedin.com/oauth/v2/authorization"
-        f"?response_type=code"
-        f"&client_id={CLIENT_ID}"
-        f"&redirect_uri={quote(REDIRECT_URI)}"  # NOT encoded here
-        f"&state={state}"
-        f"&scope={quote(SCOPES)}"       # ONLY encode scope
-    )
+    params = {
+        'response_type': 'code',
+        'client_id': CLIENT_ID,
+        'redirect_uri': REDIRECT_URI,
+        'state': state,
+        'scope': SCOPES
+    }
+    auth_url = 'https://www.linkedin.com/oauth/v2/authorization?' + urlencode(params)
     logging.info(f"Generated auth URL: {auth_url}")
     return jsonify({'authUrl': auth_url})
 
@@ -145,9 +147,6 @@ class LinkedInBot:
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option("useAutomationExtension", False)
         options.add_argument("--window-size=1920,1080")
-        
-        service = Service(ChromeDriverManager().install())
-        self.driver = webdriver.Chrome(service=service, options=options)
         self.driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
         "source": """
             Object.defineProperty(navigator, 'webdriver', {
@@ -155,6 +154,8 @@ class LinkedInBot:
             });
         """
         })
+        service = Service(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome(service=service, options=options)
         self.wait = WebDriverWait(self.driver, 20)
 
     def login(self):
