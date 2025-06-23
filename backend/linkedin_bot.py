@@ -140,6 +140,8 @@ class LinkedInBot:
     def setup_browser(self):
         options = webdriver.ChromeOptions()
         #options.add_argument("--headless=new")
+        user_data_dir = f"/tmp/chrome-user-data-{uuid.uuid4().hex}"
+        options.add_argument(f"--user-data-dir={user_data_dir}")
         options.add_argument("--disable-gpu")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
