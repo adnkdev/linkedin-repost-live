@@ -1,0 +1,60 @@
+user  root;
+worker_processes  auto;
+
+events {
+  worker_connections 4096;
+}
+
+http {
+  include       mime.types;
+  default_type  application/octet-stream;
+
+  # Upstream services
+  upstream flask_upstream {
+    server 127.0.0.1:5000;
+  }
+
+  upstream novnc_upstream {
+    server 127.0.0.1:10000;
+    keepalive 32;
+  }
+
+  server {
+    listen ${PORT} default_server;
+    server_name _;
+
+    # Flask API endpoint
+    location /api/ {
+      proxy_pass http://flask_upstream;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+  
+location /vnc/ {
+    # Serve static files first
+    alias /opt/novnc/;
+    index vnc.html;
+    try_files $uri $uri/ @websockify;
+}
+
+location @websockify {
+    # Proxy WebSocket requests
+    proxy_pass http://novnc_upstream;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $host;
+    
+    proxy_connect_timeout 7d;
+    proxy_send_timeout 7d;
+    proxy_read_timeout 7d;
+}
+
+    # Default 404
+    location / {
+      return 404;
+    }
+  }
+}

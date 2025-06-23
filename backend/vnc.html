@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>noVNC</title>
+    <meta charset="utf-8">
+    <script type="text/javascript">
+UI.connectButton.onclick = function() {
+    UI.connect(
+        window.location.hostname,
+        window.location.port || (window.location.protocol === 'https:' ? 443 : 80),
+        'vnc/websockify',  // Critical path change
+        document.getElementById('password').value
+    );
+    return false;
+};
+    </script>
+    <script type="text/javascript" src="vnc.js"></script>
+</head>
+<body>
+    <div id="noVNC_screen"></div>
+</body>
+</html>

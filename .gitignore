@@ -1,0 +1,8 @@
+# React front end
+frontend/node_modules/
+frontend/build/
+
+# Flask back end
+backend/venv/
+backend/__pycache__/
+backend/*.pyc
