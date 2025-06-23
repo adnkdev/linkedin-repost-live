@@ -16,16 +16,18 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends google-chrome-stable && \
     rm -rf /var/lib/apt/lists/*
 
-# 3. Set environment for Chrome
+# 3. Set Chrome environment
 ENV CHROME_BIN=/usr/bin/google-chrome
 
-# 4. Create app directory and copy files
+# 4. Set working directory
 WORKDIR /usr/src/app
-COPY . .
 
-# 5. Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# 5. Copy backend folder contents
+COPY backend/ ./backend/
 
-# 6. Expose Flask port and run with Gunicorn (recommended for production)
+# 6. Install dependencies
+RUN pip install --no-cache-dir -r backend/requirements.txt
+
+# 7. Expose port and run
 EXPOSE 5000
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "linkedin_bot:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "backend.linkedin_bot:app"]
