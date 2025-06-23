@@ -158,6 +158,7 @@ class LinkedInBot:
         })
         self.wait = WebDriverWait(self.driver, 20)
 
+ 
     def login(self):
         self.driver.get("https://www.linkedin.com/login")
         user = self.wait.until(EC.presence_of_element_located((By.ID, "username")))
@@ -165,12 +166,14 @@ class LinkedInBot:
         user.send_keys(self.email)
         pwd.send_keys(self.password)
         pwd.send_keys(Keys.RETURN)
-        time.sleep(20)
+        time.sleep(5)  # Allow redirect to complete
+
         try:
-            self.wait.until(EC.presence_of_element_located((By.ID, "global-nav")))
+            self.wait.until(EC.url_contains("/feed"))
             return True
         except TimeoutException:
-            return False
+            logging.error("Login failed or still on login page.")
+        return False
 
     def find_top_post(self):
         encoded = quote_plus(self.search_query)
