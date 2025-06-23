@@ -35,14 +35,14 @@ VALID_STATES = set()
 def start_oauth():
     state = str(uuid.uuid4())
     VALID_STATES.add(state)
-    params = {
-        'response_type': 'code',
-        'client_id': CLIENT_ID,
-        'redirect_uri': REDIRECT_URI,
-        'state': state,
-        'scope': SCOPES
-    }
-    auth_url = 'https://www.linkedin.com/oauth/v2/authorization?' + urlencode(params, quote_via=quote)
+    auth_url = (
+        "https://www.linkedin.com/oauth/v2/authorization"
+        f"?response_type=code"
+        f"&client_id={CLIENT_ID}"
+        f"&redirect_uri={REDIRECT_URI}"  # NOT encoded here
+        f"&state={state}"
+        f"&scope={quote(SCOPES)}"       # ONLY encode scope
+    )
     logging.info(f"Generated auth URL: {auth_url}")
     return jsonify({'authUrl': auth_url})
 
