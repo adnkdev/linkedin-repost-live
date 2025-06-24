@@ -177,5 +177,3 @@ def stop_bot():
     status_code = 200 if stopped else 409
     return jsonify({'stopped': stopped}), status_code
 
-if __name__ == '__main__':
-    app.run(port=5000, debug=True)

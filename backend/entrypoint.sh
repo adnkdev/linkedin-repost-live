@@ -46,4 +46,4 @@ nginx
 
 # Start Flask app via Gunicorn (must point to correct module)
 echo "Starting Gunicorn..."
-exec gunicorn -w 4 -b 0.0.0.0:5000 backend.linkedin_bot:app
+exec gunicorn -w 4 -b 0.0.0.0:5000 linkedin_bot:app
