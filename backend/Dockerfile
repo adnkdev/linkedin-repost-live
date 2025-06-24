@@ -19,24 +19,24 @@ RUN wget -qO- https://dl.google.com/linux/linux_signing_key.pub | apt-key add - 
     apt-get install -y --no-install-recommends google-chrome-stable && \
     rm -rf /var/lib/apt/lists/*
 
-# 4. Set Chrome environment
+# 4. Environment variables
 ENV CHROME_BIN=/usr/bin/google-chrome
 ENV DISPLAY=:99
 
 # 5. Set working directory
 WORKDIR /usr/src/app
 
-# 6. Copy backend code and config
-COPY backend/ ./backend/
-COPY nginx.conf.template /etc/nginx/nginx.conf.template
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# 6. Copy all backend files into container
+COPY . .
 
 # 7. Install Python dependencies
-RUN pip install --no-cache-dir -r backend/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# 8. Expose backend and noVNC ports
+# 8. Make entrypoint executable
+RUN chmod +x /entrypoint.sh
+
+# 9. Expose Flask + noVNC ports
 EXPOSE 5000 10000
 
-# 9. Set entrypoint
+# 10. Run script
 ENTRYPOINT ["/entrypoint.sh"]
