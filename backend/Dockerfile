@@ -30,7 +30,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 # 7. Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r ./requirements.txt
 
 # 8. Make entrypoint executable
 RUN chmod +x entrypoint.sh
