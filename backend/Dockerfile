@@ -33,7 +33,7 @@ COPY . .
 RUN pip install --no-cache-dir -r backend/requirements.txt
 
 # 8. Make entrypoint executable
-RUN chmod +x /entrypoint.sh
+RUN chmod +x entrypoint.sh
 
 # 9. Expose ports
 EXPOSE 5000 10000
